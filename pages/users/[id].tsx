@@ -4,7 +4,7 @@ import { NextPageContext } from 'next';
 import { User } from '../../interfaces';
 import Layout from '../../components/Layout';
 import ListDetail from '../../components/ListDetail';
-import { sampleFetchWrapper } from '../../utils/sample-api';
+import { fetchWrapper } from '../../utils/sample-api';
 
 type Props = {
   item?: User;
@@ -15,7 +15,7 @@ class InitialPropsDetail extends React.Component<Props> {
   static getInitialProps = async ({ query }: NextPageContext) => {
     try {
       const { id } = query;
-      const item = await sampleFetchWrapper(
+      const item = await fetchWrapper(
         `/api/users/${Array.isArray(id) ? id[0] : id}`
       );
       return { item };

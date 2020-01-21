@@ -1,10 +1,7 @@
 import fetch from 'isomorphic-unfetch';
 import config from '../common/config';
 
-export async function sampleFetchWrapper(
-  input: RequestInfo,
-  init?: RequestInit
-) {
+export async function fetchWrapper(input: RequestInfo, init?: RequestInit) {
   try {
     const data = await fetch(
       `${config.host}:${config.port}${input}`,
