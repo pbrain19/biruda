@@ -4,7 +4,7 @@ import config from '../common/config';
 export async function fetchWrapper(input: RequestInfo, init?: RequestInit) {
   try {
     const data = await fetch(
-      `${config.host}:${config.port}${input}`,
+      `//${config.host}:${config.port}${input}`,
       init
     ).then(res => res.json());
     return data;
