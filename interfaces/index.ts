@@ -4,7 +4,34 @@
 //
 // import User from 'path/to/interfaces';
 
-export type User = {
-  id: number;
-  name: string;
-};
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  dob?: Date;
+}
+
+export interface Commitment {
+  id: string;
+  userId: string;
+  listingId: string;
+  dateSigned: Date;
+}
+
+export interface Listing {
+  id: string;
+  title: string;
+  totalPrice: number;
+  estimatedConstructionTime: number;
+  description: string;
+  authorId: string;
+  prospectus: string;
+  images: string[];
+}
+
+export interface Bid {
+  id: string;
+  businessId: string;
+  listingId: string;
+  dateSigned: Date;
+}
