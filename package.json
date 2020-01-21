@@ -1,6 +1,9 @@
 {
-  "name": "with-typescript",
+  "name": "biruda",
   "version": "1.0.0",
+  "engines": {
+    "node": "13.6.x"
+  },
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -15,8 +18,9 @@
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
-    "@types/react": "^16.9.16",
+    "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
+    "prettier": "1.19.1",
     "typescript": "3.7.3"
   },
   "license": "ISC"
