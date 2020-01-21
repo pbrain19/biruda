@@ -1,12 +1,8 @@
 import fetch from 'isomorphic-unfetch';
-import config from '../common/config';
 
 export async function fetchWrapper(input: RequestInfo, init?: RequestInit) {
   try {
-    const data = await fetch(
-      `//${config.host}:${config.port}${input}`,
-      init
-    ).then(res => res.json());
+    const data = await fetch(input, init).then(res => res.json());
     return data;
   } catch (err) {
     throw new Error(err.message);
