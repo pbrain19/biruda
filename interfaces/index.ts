@@ -3,6 +3,11 @@
 // example, to import the interface below do:
 //
 // import User from 'path/to/interfaces';
+import express from 'express';
+
+export type ParsedRequest = {
+  firebaseServer?: any; // or any other type
+} & express.Request;
 
 export interface User {
   id: string;
