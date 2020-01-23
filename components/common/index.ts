@@ -20,6 +20,10 @@ export {
   ListItemText,
   ListSubheader,
   Link as StyledLink,
+  ThemeProvider,
+  NoSsr,
+  createMuiTheme,
+  StylesProvider,
 } from '@material-ui/core';
 
 export { default as MenuIcon } from '@material-ui/icons/Menu';
