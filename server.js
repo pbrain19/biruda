@@ -1,21 +1,24 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import session from 'express-session';
-import FileStore from 'session-file-store';
-import next from 'next';
-import admin from 'firebase-admin';
-import { ParsedRequest } from './interfaces/index';
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const next = require('next');
+const admin = require('firebase-admin');
+const config = require('./credentials/config');
+const redis = require('redis');
 
-const FileStoreInstance = FileStore(session);
+const RedisStore = require('connect-redis')(session);
+const redisClient = redis.createClient(config.REDIS_URL);
 
-const port = parseInt(process.env.PORT || '3000', 10);
+const port = config.port;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const firebase = admin.initializeApp(
   {
-    credential: admin.credential.cert(require('./credentials/server')),
+    credential: admin.credential.cert(
+      require('./common/firebaseServerCredentials')
+    ),
   },
   'server'
 );
@@ -28,19 +31,19 @@ app.prepare().then(() => {
     session({
       secret: 'geheimnis',
       saveUninitialized: true,
-      store: new FileStoreInstance({ secret: 'geheimnis' }),
+      store: new RedisStore({ client: redisClient }),
       resave: false,
       rolling: true,
       // cookie: { maxAge: 604800000, httpOnly: true }, // week
     })
   );
 
-  server.use((req: ParsedRequest, _, next) => {
+  server.use((req, _, next) => {
     req.firebaseServer = firebase;
     next();
   });
 
-  server.post('/api/login', (req: ParsedRequest, res) => {
+  server.post('/api/login', (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
     const token = req.body.token;
@@ -48,19 +51,19 @@ app.prepare().then(() => {
       .auth()
       .verifyIdToken(token)
       .then(decodedToken => {
-        req.session!.decodedToken = decodedToken;
+        req.session.decodedToken = decodedToken;
         return decodedToken;
       })
       .then(decodedToken => res.json({ status: true, decodedToken }))
       .catch(error => res.json({ error }));
   });
 
-  server.post('/api/logout', (req: ParsedRequest, res) => {
-    req.session!.decodedToken = null;
+  server.post('/api/logout', (req, res) => {
+    req.session.decodedToken = null;
     res.json({ status: true });
   });
 
-  server.get('*', (req: ParsedRequest, res) => {
+  server.get('*', (req, res) => {
     return handle(req, res);
   });
 
