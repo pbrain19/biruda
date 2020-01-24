@@ -16,7 +16,9 @@ import {
   ThemeProvider as MuiThemeProvider,
   createMuiTheme,
   StylesProvider,
+  NoSsr,
 } from './common';
+import { CssBaseline } from '@material-ui/core';
 
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -87,13 +89,14 @@ const StyledAppBar = styled(AppBar)<AdditionalProps>`
   ${props =>
     props.open
       ? css`
-    margin-left: ${props.drawerwidth}px,
-    width: calc(100% - ${props.drawerwidth}px),
-    transition: ${props.theme.transitions.create(['width', 'margin'], {
-      easing: props.theme.transitions.easing.sharp,
-      duration: props.theme.transitions.duration.enteringScreen,
-    })}
-  `
+          position: absolute;
+          margin-left: ${props.drawerwidth}px;
+          width: calc(100% - ${props.drawerwidth}px);
+          transition: ${props.theme.transitions.create(['width', 'margin'], {
+            easing: props.theme.transitions.easing.sharp,
+            duration: props.theme.transitions.duration.enteringScreen,
+          })};
+        `
       : ''};
 `;
 
@@ -106,7 +109,7 @@ const StyledIconButton = styled(IconButton)<AdditionalProps>`
     })};
 
   ${props =>
-    !props.open
+    props.open
       ? css`
           display: none;
         `
@@ -117,16 +120,18 @@ const StyledTypography = styled(Typography)<AdditionalProps>`
   flex-grow: 1;
 `;
 
-const StyledDrawer = styled(({ drawerwidth, ...rest }) => (
-  <Drawer
-    {...rest}
-    drawerwidth={drawerwidth}
-    classes={{ paper: 'paper-override' }}
-  />
+const StyledDrawer = styled(({ ...rest }) => (
+  <Drawer {...rest} classes={{ paper: 'paper-override' }} />
 ))`
-  width: ${props => props.drawerwidth}px;
+  width: ${props =>
+    props.open ? props.drawerwidth : props.theme.spacing(7)}px;
+  transition: ${props =>
+    props.theme.transitions.create('width', {
+      easing: props.theme.transitions.easing.sharp,
+      duration: props.theme.transitions.duration.enteringScreen,
+    })};
 
-  & .paper-override {
+  > .paper-override {
     position: relative;
     white-space: nowrap;
     width: ${props => props.drawerwidth}px;
@@ -146,11 +151,11 @@ const StyledDrawer = styled(({ drawerwidth, ...rest }) => (
       !props.open
         ? css`
             overflow-x: hidden;
+            width: ${props.theme.spacing(7)}px;
             transition: ${props.theme.transitions.create('width', {
               easing: props.theme.transitions.easing.sharp,
               duration: props.theme.transitions.duration.leavingScreen,
             })};
-            width: ${props.theme.spacing(7)}px;
           `
         : ''};
   }
@@ -158,10 +163,10 @@ const StyledDrawer = styled(({ drawerwidth, ...rest }) => (
 
 // @ts-ignore
 const ToolbarIcon = styled.div`
-  display: 'flex';
-  align-items: 'center';
-  justify-content: 'flex-end';
-  padding: '0 8px';
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 8px;
 
   ${props => props.theme.mixins.toolbar}
 `;
@@ -191,65 +196,67 @@ const Layout: React.FunctionComponent<Props> = ({ children }) => {
   };
 
   return (
-    <StylesProvider injectFirst>
-      <MuiThemeProvider theme={myTheme}>
-        <ThemeProvider theme={myTheme}>
-          <Root>
-            <StyledAppBar
-              position="absolute"
-              drawerwidth={DRAWER_WIDTH}
-              open={open}
-            >
-              <Toolbar
-                style={{
-                  paddingRight: 24,
-                }}
+    <NoSsr>
+      <CssBaseline />
+      <StylesProvider injectFirst>
+        <MuiThemeProvider theme={myTheme}>
+          <ThemeProvider theme={myTheme}>
+            <Root>
+              <StyledAppBar
+                position="absolute"
+                drawerwidth={DRAWER_WIDTH}
+                open={open}
               >
-                <StyledIconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  drawerwidth={DRAWER_WIDTH}
-                  open={open}
+                <Toolbar
+                  style={{
+                    paddingRight: 24,
+                  }}
                 >
-                  <MenuIcon />
-                </StyledIconButton>
-                <StyledTypography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  noWrap
-                >
-                  Dashboard
-                </StyledTypography>
-              </Toolbar>
-            </StyledAppBar>
+                  <StyledIconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDrawerOpen}
+                    drawerwidth={DRAWER_WIDTH}
+                    open={open}
+                  >
+                    <MenuIcon />
+                  </StyledIconButton>
+                  <StyledTypography
+                    component="h1"
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                  >
+                    Dashboard
+                  </StyledTypography>
+                </Toolbar>
+              </StyledAppBar>
 
-            <StyledDrawer
-              drawerwidth={DRAWER_WIDTH}
-              variant="permanent"
-              open={open}
-              key={JSON.stringify(open)}
-            >
-              <ToolbarIcon>
-                <IconButton onClick={handleDrawerClose}>
-                  <ChevronLeftIcon />
-                </IconButton>
-              </ToolbarIcon>
-              <Divider />
-              <List>{mainListItems}</List>
-              <Divider />
-            </StyledDrawer>
+              <StyledDrawer
+                drawerwidth={DRAWER_WIDTH}
+                variant="permanent"
+                open={open}
+              >
+                <ToolbarIcon>
+                  <IconButton onClick={handleDrawerClose}>
+                    <ChevronLeftIcon />
+                  </IconButton>
+                </ToolbarIcon>
+                <Divider />
+                <List>{mainListItems}</List>
+                <Divider />
+              </StyledDrawer>
 
-            <StyledContent>
-              <AppBarSpacer />
-              <StyledContainer maxWidth="lg">{children}</StyledContainer>
-            </StyledContent>
-          </Root>
-        </ThemeProvider>
-      </MuiThemeProvider>
-    </StylesProvider>
+              <StyledContent>
+                <AppBarSpacer />
+                <StyledContainer maxWidth="lg">{children}</StyledContainer>
+              </StyledContent>
+            </Root>
+          </ThemeProvider>
+        </MuiThemeProvider>
+      </StylesProvider>
+    </NoSsr>
   );
 };
 
