@@ -8,60 +8,28 @@ import {
   Typography,
   Divider,
   IconButton,
-  ListItem,
   MenuIcon,
   ChevronLeftIcon,
-  ListItemIcon,
-  ListItemText,
   ThemeProvider as MuiThemeProvider,
   createMuiTheme,
   StylesProvider,
   NoSsr,
 } from './common';
-import { CssBaseline } from '@material-ui/core';
 
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
+import ListItems from './List';
+import { CssBaseline } from '@material-ui/core';
+import { NextPage } from 'next';
+import { firebase_client } from '../credentials/config';
+
+import firebase from 'firebase/app';
+
+import 'firebase/auth';
+import 'firebase/firestore';
+
+import PersonIcon from '@material-ui/icons/Person';
 
 const myTheme = createMuiTheme();
 
-export const mainListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Integrations" />
-    </ListItem>
-  </div>
-);
 import { ContainerProps } from '@material-ui/core';
 
 interface AdditionalProps {
@@ -69,10 +37,6 @@ interface AdditionalProps {
   drawerwidth?: number;
   component?: string;
 }
-
-type Props = {
-  title?: string;
-};
 
 const Root = styled.div`
   display: flex;
@@ -185,8 +149,25 @@ const StyledContainer = styled.div<ContainerProps>`
 const AppBarSpacer = styled.div`
   ${props => props.theme.mixins.toolbar}
 `;
+
 const DRAWER_WIDTH = 250;
-const Layout: React.FunctionComponent<Props> = ({ children }) => {
+
+const handleGoogleLogin = () => {
+  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+};
+
+const handleFacebookLogin = () => {
+  firebase.auth().signInWithPopup(new firebase.auth.FacebookAuthProvider());
+};
+
+const handleLogout = () => {
+  firebase.auth().signOut();
+};
+
+const Layout: NextPage = ({ children }) => {
+  React.useEffect(() => {
+    firebase.initializeApp(firebase_client);
+  }, []);
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -230,6 +211,29 @@ const Layout: React.FunctionComponent<Props> = ({ children }) => {
                   >
                     Dashboard
                   </StyledTypography>
+
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    onClick={handleGoogleLogin}
+                  >
+                    Login google
+                    <PersonIcon />
+                  </IconButton>
+
+                  <IconButton
+                    edge="end"
+                    color="inherit"
+                    onClick={handleFacebookLogin}
+                  >
+                    Login facebook
+                    <PersonIcon />
+                  </IconButton>
+
+                  <IconButton edge="end" color="inherit" onClick={handleLogout}>
+                    Logout
+                    <PersonIcon />
+                  </IconButton>
                 </Toolbar>
               </StyledAppBar>
 
@@ -244,7 +248,9 @@ const Layout: React.FunctionComponent<Props> = ({ children }) => {
                   </IconButton>
                 </ToolbarIcon>
                 <Divider />
-                <List>{mainListItems}</List>
+                <List>
+                  <ListItems />
+                </List>
                 <Divider />
               </StyledDrawer>
 

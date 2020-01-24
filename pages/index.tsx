@@ -28,4 +28,13 @@ const IndexPage: NextPage = () => {
   );
 };
 
+IndexPage.getInitialProps = async ({ req }: any) => {
+  const user = req && req.session ? req.session.decodedToken : null;
+  // don't fetch anything from firebase if the user is not found
+  // const snap = user && await req.firebaseServer.database().ref('messages').once('value')
+  // const messages = snap && snap.val()
+  const messages = null;
+  return { user, messages };
+};
+
 export default IndexPage;
