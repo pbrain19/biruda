@@ -37,15 +37,7 @@ class InitialPropsDetail extends React.Component<Props> {
       );
     }
 
-    return (
-      <Layout
-        title={`${
-          item ? item.firstName : 'User Detail'
-        } | Next.js + TypeScript Example`}
-      >
-        {item && <ListDetail item={item} />}
-      </Layout>
-    );
+    return <Layout>{item && <ListDetail item={item} />}</Layout>;
   }
 }
 
