@@ -2,7 +2,6 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 
 import Layout from '../../components/Layout';
-import List from '../../components/List';
 import { User } from '../../interfaces';
 import { fetchWrapper } from '../../utils/sample-api';
 
@@ -18,7 +17,6 @@ const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
       Example fetching data from inside <code>getInitialProps()</code>.
     </p>
     <p>You are currently on: {pathname}</p>
-    <List items={items} />
     <p>
       <Link href="/">
         <a>Go home</a>
