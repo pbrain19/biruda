@@ -3,14 +3,13 @@ import Link from 'next/link';
 
 import Layout from '../../components/Layout';
 import { User } from '../../interfaces';
-import { fetchWrapper } from '../../utils/sample-api';
 
 type Props = {
   items: User[];
   pathname: string;
 };
 
-const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
+const WithInitialProps: NextPage<Props> = ({ pathname }) => (
   <Layout>
     <h1>Users List</h1>
     <p>
@@ -24,14 +23,5 @@ const WithInitialProps: NextPage<Props> = ({ items, pathname }) => (
     </p>
   </Layout>
 );
-
-WithInitialProps.getInitialProps = async ({ pathname }) => {
-  // Example for including initial props in a Next.js function component page.
-  // Don't forget to include the respective types for any props passed into
-  // the component.
-  const items: User[] = await fetchWrapper('/api/users');
-
-  return { items, pathname };
-};
 
 export default WithInitialProps;

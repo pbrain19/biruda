@@ -4,7 +4,7 @@ import { NextPageContext } from 'next';
 import { User } from '../../interfaces';
 import Layout from '../../components/Layout';
 import ListDetail from '../../components/ListDetail';
-import { fetchWrapper } from '../../utils/sample-api';
+import { fetchWrapper } from '../../utils/fetch-wrapper';
 
 type Props = {
   item?: User;

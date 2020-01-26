@@ -7,7 +7,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 
-export const MainListItems = () => (
+export const MainListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>

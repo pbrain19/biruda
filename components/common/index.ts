@@ -29,3 +29,4 @@ export {
 export { default as MenuIcon } from '@material-ui/icons/Menu';
 export { default as ChevronLeftIcon } from '@material-ui/icons/ChevronLeft';
 export { default as NotificationsIcon } from '@material-ui/icons/Notifications';
+export * from './LayoutComponents';

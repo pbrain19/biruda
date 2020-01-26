@@ -1,11 +1,9 @@
 import * as React from 'react';
-import styled, { css, ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+
 import {
-  AppBar,
-  Drawer,
   Toolbar,
   List,
-  Typography,
   Divider,
   IconButton,
   MenuIcon,
@@ -14,12 +12,20 @@ import {
   createMuiTheme,
   StylesProvider,
   NoSsr,
+  StyledAppBar,
+  StyledDrawer,
+  StyledContainer,
+  StyledIconButton,
+  StyledTypography,
+  ToolbarIcon,
+  StyledContent,
+  AppBarSpacer,
 } from './common';
 
 import ListItems from './List';
 import { CssBaseline } from '@material-ui/core';
 import { NextPage } from 'next';
-import { firebase_client } from '../credentials/config';
+import { FIREBASE_CLIENT } from '../credentials/config';
 
 import firebase from 'firebase/app';
 
@@ -30,151 +36,83 @@ import PersonIcon from '@material-ui/icons/Person';
 
 const myTheme = createMuiTheme();
 
-import { ContainerProps } from '@material-ui/core';
-
-interface AdditionalProps {
-  open?: boolean;
-  drawerwidth?: number;
-  component?: string;
-}
-
 const Root = styled.div`
   display: flex;
 `;
 
-const StyledAppBar = styled(AppBar)<AdditionalProps>`
-  z-index: ${props => props.theme.zIndex.drawer + 1};
-  transition: ${props =>
-    props.theme.transitions.create(['width', 'margin'], {
-      easing: props.theme.transitions.easing.sharp,
-      duration: props.theme.transitions.duration.leavingScreen,
-    })};
-
-  ${props =>
-    props.open
-      ? css`
-          position: absolute;
-          margin-left: ${props.drawerwidth}px;
-          width: calc(100% - ${props.drawerwidth}px);
-          transition: ${props.theme.transitions.create(['width', 'margin'], {
-            easing: props.theme.transitions.easing.sharp,
-            duration: props.theme.transitions.duration.enteringScreen,
-          })};
-        `
-      : ''};
-`;
-
-const StyledIconButton = styled(IconButton)<AdditionalProps>`
-  z-index: ${props => props.theme.zIndex.drawer + 1};
-  transition: ${props =>
-    props.theme.transitions.create(['width', 'margin'], {
-      easing: props.theme.transitions.easing.sharp,
-      duration: props.theme.transitions.duration.leavingScreen,
-    })};
-
-  ${props =>
-    props.open
-      ? css`
-          display: none;
-        `
-      : ''};
-`;
-
-const StyledTypography = styled(Typography)<AdditionalProps>`
-  flex-grow: 1;
-`;
-
-const StyledDrawer = styled(({ ...rest }) => (
-  <Drawer {...rest} classes={{ paper: 'paper-override' }} />
-))`
-  width: ${props =>
-    props.open ? props.drawerwidth : props.theme.spacing(7)}px;
-  transition: ${props =>
-    props.theme.transitions.create('width', {
-      easing: props.theme.transitions.easing.sharp,
-      duration: props.theme.transitions.duration.enteringScreen,
-    })};
-
-  > .paper-override {
-    position: relative;
-    white-space: nowrap;
-    width: ${props => props.drawerwidth}px;
-    transition: ${props =>
-      props.theme.transitions.create('width', {
-        easing: props.theme.transitions.easing.sharp,
-        duration: props.theme.transitions.duration.enteringScreen,
-      })};
-
-    ${props => css`
-      [${props.theme.breakpoints.up('sm')}]: {
-        width: ${props.theme.spacing(9)};
-      };
-    `};
-
-    ${props =>
-      !props.open
-        ? css`
-            overflow-x: hidden;
-            width: ${props.theme.spacing(7)}px;
-            transition: ${props.theme.transitions.create('width', {
-              easing: props.theme.transitions.easing.sharp,
-              duration: props.theme.transitions.duration.leavingScreen,
-            })};
-          `
-        : ''};
-  }
-`;
-
-// @ts-ignore
-const ToolbarIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0 8px;
-
-  ${props => props.theme.mixins.toolbar}
-`;
-
-const StyledContent = styled.main`
-  flex-grow: 1;
-  height: '100vh';
-  overflow: 'auto';
-`;
-
-const StyledContainer = styled.div<ContainerProps>`
-  padding-top: ${props => props.theme.spacing(4)};
-  padding-bottom: ${props => props.theme.spacing(4)};
-`;
-
-const AppBarSpacer = styled.div`
-  ${props => props.theme.mixins.toolbar}
-`;
-
 const DRAWER_WIDTH = 250;
 
-const handleGoogleLogin = () => {
+const handleGoogleLogin: () => void = () => {
   firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
 };
 
-const handleFacebookLogin = () => {
+const handleFacebookLogin: () => void = () => {
   firebase.auth().signInWithPopup(new firebase.auth.FacebookAuthProvider());
 };
 
-const handleLogout = () => {
+const handleLogout: () => void = () => {
   firebase.auth().signOut();
 };
 
-const Layout: NextPage = ({ children }) => {
+interface Props {
+  User?: firebase.User | null;
+  children?: React.Component;
+}
+
+const Layout: NextPage<Props> = ({ children, User }: Props) => {
+  const [user, setUser] = React.useState(User);
+
   React.useEffect(() => {
-    firebase.initializeApp(firebase_client);
+    firebase.initializeApp(FIREBASE_CLIENT);
+
+    firebase.auth().onAuthStateChanged(authUser => {
+      if (authUser) {
+        setUser(authUser);
+        return authUser.getIdToken().then(token => {
+          return fetch('/api/login', {
+            method: 'POST',
+            // eslint-disable-next-line no-undef
+            headers: new Headers({ 'Content-Type': 'application/json' }),
+            credentials: 'same-origin',
+            body: JSON.stringify({ token }),
+          });
+        });
+      } else {
+        setUser(null);
+        fetch('/api/logout', {
+          method: 'POST',
+          credentials: 'same-origin',
+        });
+      }
+    });
   }, []);
+
   const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
+  const handleDrawerOpen: () => void = () => {
     setOpen(true);
   };
-  const handleDrawerClose = () => {
+  const handleDrawerClose: () => void = () => {
     setOpen(false);
   };
+
+  const AuthButtons = user ? (
+    <IconButton edge="end" color="inherit" onClick={handleLogout}>
+      Logout
+      <PersonIcon />
+    </IconButton>
+  ) : (
+    <React.Fragment>
+      <IconButton edge="end" color="inherit" onClick={handleGoogleLogin}>
+        Login google
+        <PersonIcon />
+      </IconButton>
+
+      <IconButton edge="end" color="inherit" onClick={handleFacebookLogin}>
+        Login facebook
+        <PersonIcon />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <NoSsr>
@@ -212,28 +150,7 @@ const Layout: NextPage = ({ children }) => {
                     Dashboard
                   </StyledTypography>
 
-                  <IconButton
-                    edge="end"
-                    color="inherit"
-                    onClick={handleGoogleLogin}
-                  >
-                    Login google
-                    <PersonIcon />
-                  </IconButton>
-
-                  <IconButton
-                    edge="end"
-                    color="inherit"
-                    onClick={handleFacebookLogin}
-                  >
-                    Login facebook
-                    <PersonIcon />
-                  </IconButton>
-
-                  <IconButton edge="end" color="inherit" onClick={handleLogout}>
-                    Logout
-                    <PersonIcon />
-                  </IconButton>
+                  {AuthButtons}
                 </Toolbar>
               </StyledAppBar>
 
@@ -248,9 +165,7 @@ const Layout: NextPage = ({ children }) => {
                   </IconButton>
                 </ToolbarIcon>
                 <Divider />
-                <List>
-                  <ListItems />
-                </List>
+                <List>{ListItems}</List>
                 <Divider />
               </StyledDrawer>
 
@@ -264,6 +179,13 @@ const Layout: NextPage = ({ children }) => {
       </StylesProvider>
     </NoSsr>
   );
+};
+
+Layout.getInitialProps = async ({ req }: any) => {
+  const User: firebase.User =
+    req && req.session ? req.session.decodedToken : null;
+
+  return { User };
 };
 
 export default Layout;

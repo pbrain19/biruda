@@ -7,7 +7,7 @@ type Props = {
   data: User;
 };
 
-const ListItem: React.FunctionComponent<Props> = ({ data }) => (
+const ListItem: React.FunctionComponent<Props> = ({ data }: Props) => (
   <Link href="/users/[id]" as={`/users/${data.id}`}>
     <a>
       {data.id}: {data.firstName}
