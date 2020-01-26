@@ -3,9 +3,10 @@ import Link from 'next/link';
 import Head from 'next/head';
 
 import Layout from '../components/Layout';
+import { ContextProps } from '../common/context';
 import { NextPage } from 'next';
 
-const IndexPage: NextPage = () => {
+const IndexPage: NextPage<ContextProps> = ({ User }: ContextProps) => {
   return (
     <React.Fragment>
       <Layout>
@@ -17,7 +18,7 @@ const IndexPage: NextPage = () => {
             content="initial-scale=1.0, width=device-width"
           />
         </Head>
-        <h1>Hello Next.js 👋</h1>
+        <h1>Hello Next.js {User && User.email} 👋</h1>
         <p>
           <Link href="/about">
             <a>About</a>
@@ -26,6 +27,13 @@ const IndexPage: NextPage = () => {
       </Layout>
     </React.Fragment>
   );
+};
+
+IndexPage.getInitialProps = async ({ req }: any) => {
+  const User: firebase.User =
+    req && req.session ? req.session.decodedToken : null;
+
+  return { User };
 };
 
 export default IndexPage;

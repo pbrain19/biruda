@@ -27,6 +27,7 @@ import ListItems from './List';
 import { CssBaseline } from '@material-ui/core';
 import { NextPage } from 'next';
 import { FIREBASE_CLIENT } from '../credentials/config';
+import { AppContext } from '../common/context';
 
 import firebase from 'firebase/app';
 
@@ -77,7 +78,6 @@ const Layout: NextPage<Props> = ({ children, User }: Props) => {
           credentials: 'same-origin',
           body: JSON.stringify({ token }),
         });
-        debugger;
         setUser(decodedToken);
       } else {
         setUser(null);
@@ -173,7 +173,13 @@ const Layout: NextPage<Props> = ({ children, User }: Props) => {
 
               <StyledContent>
                 <AppBarSpacer />
-                <StyledContainer maxWidth="lg">{children}</StyledContainer>
+                <StyledContainer maxWidth="lg">
+                  {user && (
+                    <AppContext.Provider value={{ User: user || null }}>
+                      {children}
+                    </AppContext.Provider>
+                  )}
+                </StyledContainer>
               </StyledContent>
             </Root>
           </ThemeProvider>
