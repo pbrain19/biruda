@@ -14,6 +14,7 @@ module.exports = {
   },
   rules: {
     'react/prefer-stateless-function': [2],
+    '@typescript-eslint/explicit-function-return-type': [0],
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
   },

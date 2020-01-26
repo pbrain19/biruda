@@ -21,6 +21,7 @@ import {
   StyledContent,
   AppBarSpacer,
 } from './common';
+import { fetchWrapper } from '../utils/fetch-wrapper';
 
 import ListItems from './List';
 import { CssBaseline } from '@material-ui/core';
@@ -65,21 +66,22 @@ const Layout: NextPage<Props> = ({ children, User }: Props) => {
   React.useEffect(() => {
     firebase.initializeApp(FIREBASE_CLIENT);
 
-    firebase.auth().onAuthStateChanged(authUser => {
+    firebase.auth().onAuthStateChanged(async authUser => {
       if (authUser) {
-        setUser(authUser);
-        return authUser.getIdToken().then(token => {
-          return fetch('/api/login', {
-            method: 'POST',
-            // eslint-disable-next-line no-undef
-            headers: new Headers({ 'Content-Type': 'application/json' }),
-            credentials: 'same-origin',
-            body: JSON.stringify({ token }),
-          });
+        const token = await authUser.getIdToken();
+
+        const { decodedToken } = await fetchWrapper('/api/login', {
+          method: 'POST',
+          // eslint-disable-next-line no-undef
+          headers: new Headers({ 'Content-Type': 'application/json' }),
+          credentials: 'same-origin',
+          body: JSON.stringify({ token }),
         });
+        debugger;
+        setUser(decodedToken);
       } else {
         setUser(null);
-        fetch('/api/logout', {
+        fetchWrapper('/api/logout', {
           method: 'POST',
           credentials: 'same-origin',
         });
