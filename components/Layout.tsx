@@ -56,7 +56,7 @@ const handleLogout: () => void = () => {
 
 interface Props {
   User?: firebase.User | null;
-  children?: React.Component;
+  children?: any;
 }
 
 const Layout: NextPage<Props> = ({ children, User }: Props) => {
