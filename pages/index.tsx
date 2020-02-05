@@ -9,7 +9,7 @@ import { NextPage } from 'next';
 const IndexPage: NextPage<ContextProps> = ({ User }: ContextProps) => {
   return (
     <React.Fragment>
-      <Layout>
+      <Layout User={User}>
         <Head>
           <title>CityShaper</title>
           <meta charSet="utf-8" />

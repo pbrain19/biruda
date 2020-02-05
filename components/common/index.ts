@@ -24,6 +24,8 @@ export {
   NoSsr,
   createMuiTheme,
   StylesProvider,
+  Modal,
+  TextField,
 } from '@material-ui/core';
 
 export { default as MenuIcon } from '@material-ui/icons/Menu';

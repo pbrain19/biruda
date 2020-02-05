@@ -22,6 +22,7 @@ import {
   AppBarSpacer,
 } from './common';
 import { fetchWrapper } from '../utils/fetch-wrapper';
+import ListingFormModal from './Listings/ListingFormModal';
 
 import ListItems from './List';
 import { CssBaseline } from '@material-ui/core';
@@ -57,7 +58,7 @@ const handleLogout: () => void = () => {
 };
 
 interface Props {
-  User?: firebase.User | null;
+  User: firebase.User | null;
   children?: any;
 }
 
@@ -98,10 +99,13 @@ const Layout: NextPage<Props> = ({ children, User }: Props) => {
   };
 
   const AuthButtons = user ? (
-    <IconButton edge="end" color="inherit" onClick={handleLogout}>
-      Logout
-      <PersonIcon />
-    </IconButton>
+    <React.Fragment>
+      <ListingFormModal user={user} />
+      <IconButton edge="end" color="inherit" onClick={handleLogout}>
+        Logout
+        <PersonIcon />
+      </IconButton>
+    </React.Fragment>
   ) : (
     <React.Fragment>
       <IconButton edge="end" color="inherit" onClick={handleGoogleLogin}>
@@ -187,13 +191,6 @@ const Layout: NextPage<Props> = ({ children, User }: Props) => {
       </StylesProvider>
     </NoSsr>
   );
-};
-
-Layout.getInitialProps = async ({ req }: any) => {
-  const User: firebase.User =
-    req && req.session ? req.session.decodedToken : null;
-
-  return { User };
 };
 
 export default Layout;
