@@ -15,5 +15,5 @@ export default {
   Bid: bid(sequelize),
   BusinessProfile: businessProfile(sequelize),
   ListingOptions: listingOptions(sequelize),
-  PastProjects: pastProjects(sequelize)
+  PastProjects: pastProjects(sequelize),
 };

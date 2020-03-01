@@ -1,7 +1,16 @@
 import * as Sequelize from 'sequelize';
+import { Listings } from '../interfaces';
+
+interface MyModel extends Sequelize.Model {
+  readonly id: number;
+}
+
+// Need to declare the static model so `findOne` etc. use correct types.
+type MyModelStatic = typeof Sequelize.Model & {
+  new (values?: object, options?: Sequelize.BuildOptions): MyModel;
+};
 
 export default (sequelize: Sequelize.Sequelize) => {
-
   const Listing = sequelize.define(
     'listing',
     {
@@ -59,7 +68,7 @@ export default (sequelize: Sequelize.Sequelize) => {
     {
       // options
     }
-  );
+  ) as MyModelStatic;
 
   return Listing;
 };
