@@ -1,6 +1,17 @@
 import * as Sequelize from 'sequelize';
+import { PastProjects } from '../interfaces';
+
+interface MyModel extends Sequelize.Model {
+    readonly id: number;
+  }
+  
+  // Need to declare the static model so `findOne` etc. use correct types.
+  type MyModelStatic = typeof Sequelize.Model & {
+    new (values?: object, options?: Sequelize.BuildOptions): MyModel & PastProjects;
+  };
 
 export default (sequelize: Sequelize.Sequelize) => {
+
 
     const pastProjects = sequelize.define(
         'business-profile',
@@ -32,7 +43,7 @@ export default (sequelize: Sequelize.Sequelize) => {
         {
             // options
         }
-    );
+    ) as MyModelStatic;
 
     return pastProjects;
 };
