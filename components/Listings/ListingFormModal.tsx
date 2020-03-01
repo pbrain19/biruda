@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { fetchWrapper } from '../../utils/fetch-wrapper';
 
 import PersonIcon from '@material-ui/icons/Person';
 import firebase from 'firebase/app';
 import 'firebase/storage';
-
 
 import { Modal, TextField, IconButton, Button } from '../common';
 
@@ -33,14 +33,17 @@ const uploadFiles = async (
   storageRef: firebase.storage.Reference,
   files: any
 ) => {
+  const urls = [];
   for (let i = 0; i < files.length; i++) {
     const currentFile = files[i];
     const childStorage = storageRef.child(currentFile.name);
 
     const uploadedFile = await childStorage.put(currentFile);
     const downloadUrl = await uploadedFile.ref.getDownloadURL();
-    console.log(downloadUrl);
+    urls.push(downloadUrl);
   }
+
+  return urls;
 };
 
 const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
@@ -51,18 +54,22 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   const [listing, setListing] = React.useState({});
   const [imagefiles, setImageFiles] = React.useState([]);
   const [pdffiles, setPdfFiles] = React.useState([]);
-  const [optionimages,setOptionImages ] = React.useState([]);
+  const [optionimages, setOptionImages] = React.useState([]);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
-  const handleOptionUpdate = (keyId: string) => (value: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedOption = Object.assign({}, option, {[keyId]:value})
+  const handleOptionUpdate = (keyId: string) => (
+    value: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedOption = Object.assign({}, option, { [keyId]: value });
     setOption(updatedOption);
-  };  
-  const handleListingUpdate = (keyId: string) => (value: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedListing = Object.assign({}, listing, {[keyId]:value})
+  };
+  const handleListingUpdate = (keyId: string) => (
+    value: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedListing = Object.assign({}, listing, { [keyId]: value });
     setListing(updatedListing);
   };
 
@@ -73,14 +80,47 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   const onImageFileChanges = (event: any) => {
     setImageFiles(event.target.files);
   };
+
   const onPdfFileChanges = (event: any) => {
     setPdfFiles(event.target.files);
   };
 
-  const onSave = async () => {
-    // const storageRef = firebase.storage().ref(`${user.uid}/images/`);
+  const onOptionImagesChange = (event: any) => {
+    setOptionImages(event.target.files);
+  };
 
-    // uploadFiles(storageRef, files);
+  const onSave = async () => {
+    const storageRef = firebase.storage().ref(`${user.uid}/`);
+    const imagesUrls = await uploadFiles(storageRef, imagefiles);
+    const pdfUrls = await uploadFiles(storageRef, pdffiles);
+    const optionsImagesUrl = await uploadFiles(storageRef, optionimages);
+    const payload = Object.assign({}, listing, {
+      images: imagesUrls,
+      pdfProposal: pdfUrls[0],
+    });
+
+    const newListing = await fetchWrapper('/api/listings', {
+      method: 'POST',
+      // eslint-disable-next-line no-undef
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      credentials: 'same-origin',
+      body: JSON.stringify(payload),
+    });
+
+    const optionPayload = Object.assign({}, option, {
+      images: optionsImagesUrl,
+    });
+
+    const newOption = await fetchWrapper('/api/listingoptions', {
+      method: 'POST',
+      // eslint-disable-next-line no-undef
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      credentials: 'same-origin',
+      body: JSON.stringify(optionPayload),
+    });
+
+    console.log(newListing, newOption);
+    debugger;
   };
 
   return (
@@ -160,30 +200,14 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
               margin="normal"
               helperText="This determines the amount of time needed to construct a building onto a property"
             />
-            {/* <TextField
-              id="videoUrl"
-              label="Video url"
-              placeholder=""
-              fullWidth
-              margin="normal"
-              multiline
-              rows="4"
-              helperText="A walkthru of your potential project"
-            /> */}
-            <p>
-              Insert images of property here.
-            </p>
+            <p>Insert images of property here.</p>
             <input type="file" onChange={onImageFileChanges} />
-            <p>
-              Submit proposal here.
-            </p>
+            <p>Submit proposal here.</p>
             <input type="file" onChange={onPdfFileChanges} />
 
             <h2>Listing Options</h2>
-            <p>
-              Create an option to allow users to commit to your project.
-            </p>
-          <TextField
+            <p>Create an option to allow users to commit to your project.</p>
+            <TextField
               id="details"
               onChange={handleOptionUpdate('details')}
               label="details about project options"
@@ -191,8 +215,8 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
               fullWidth
               margin="normal"
               helperText="Describes the options for this commitment"
-          />
-          <TextField
+            />
+            <TextField
               id="price"
               onChange={handleOptionUpdate('price')}
               label="the overall cost of project"
@@ -200,11 +224,9 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
               fullWidth
               margin="normal"
               helperText="Describes the total cost this option"
-          />
-          <p>
-            Upload images for this project
-          </p>
-        <input type="file" onChange={onImageFileChanges} />
+            />
+            <p>Upload images for this project</p>
+            <input type="file" onChange={onOptionImagesChange} />
           </Form>
           <Button onClick={onSave}>Save</Button>
         </ModalContainer>
