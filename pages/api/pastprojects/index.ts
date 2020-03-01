@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import listingCreate from '../../../handlers/listing/create';
-import listingList from '../../../handlers/listing/list';
+import listingList from '../../../handlers/pastprojects/list';
+
+import listingCreate from '../../../handlers/pastprojects/create';
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
