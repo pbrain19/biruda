@@ -11,8 +11,12 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error('Cannot find user data');
     }
 
-    const effectiveMethod = methodMap[req.method || 'GET'];
-    effectiveMethod(req, res);
+    let effectiveMethod;
+
+    switch (req.method) {
+      case 'POST':
+      case 'GET':
+    }
 
     res.status(200).json(sampleUserData);
   } catch (err) {
