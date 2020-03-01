@@ -21,9 +21,10 @@ export interface Commitment {
   userId: string;
   listingId: string;
   dateSigned: Date;
+  option: string;
 }
 
-export interface Listing {
+export interface Listings {
   id: string;
   title: string;
   totalPrice: number;
@@ -32,6 +33,11 @@ export interface Listing {
   authorId: string;
   prospectus: string;
   images: string[];
+  address: string;
+  commitment: string;
+  pdfProposal: string;
+  summary: string;
+  winningBid: string;
 }
 
 export interface Bid {
@@ -39,4 +45,35 @@ export interface Bid {
   businessId: string;
   listingId: string;
   dateSigned: Date;
+  cost: number;
+  timeCompletion: number;
+  executionPlan: string;
+  executionPlanPdf: string;
+}
+
+export interface BusinessProfile {
+  id: string;
+  name: string;
+  nameLogo: string;
+  licenseNumber: string;
+  contractEmail: string;
+  contractTelephone: number;
+  webAddress: string;
+  portfolio: string;
+}
+
+export interface ListingOptions {
+  id: string;
+  images: string[];
+  price: number;
+  details: string;
+}
+
+export interface PastProjects {
+  id: string;
+  name: string;
+  cost: number;
+  time: number;
+  images: string[];
+  clientName: string;
 }

@@ -17,6 +17,10 @@ export default (sequelize: Sequelize.Sequelize) => {
         type: Sequelize.DATE,
         allowNull: false,
       },
+      option: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     },
     {
       // options
