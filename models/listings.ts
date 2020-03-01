@@ -51,7 +51,10 @@ export default (sequelize: Sequelize.Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
-
+      winningBid: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     },
     {
       // options

@@ -5,7 +5,7 @@ export default (sequelize: Sequelize.Sequelize) => {
     'bid',
     {
       // attributes
-      businessId: {
+      businessProfileId: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -15,6 +15,22 @@ export default (sequelize: Sequelize.Sequelize) => {
       },
       dateSigned: {
         type: Sequelize.DATE,
+        allowNull: false,
+      },
+      cost: {
+        type: Sequelize.NUMBER,
+        allowNull: false,
+      },
+      timeCompletion: {
+        type: Sequelize.NUMBER,
+        allowNull: false,
+      },
+      executionPlan: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      executionPlanPdf: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
     },
