@@ -14,6 +14,9 @@ const ModalContainer = styled.div`
   box-shadow: ${props => props.theme.shadows[5]};
   padding: ${props => props.theme.spacing(2, 4, 3)};
   margin: auto;
+
+  max-height: 700px;
+  overflow: auto;
 `;
 
 const Form = styled.form`
@@ -43,7 +46,8 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   user,
 }: ListingFormModalProps) => {
   const [open, setOpen] = React.useState(false);
-  const [files, setFiles] = React.useState([]);
+  const [imagefiles, setImageFiles] = React.useState([]);
+  const [pdffiles, setPdfFiles] = React.useState([]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -53,14 +57,17 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
     setOpen(false);
   };
 
-  const onFileChanges = (event: any) => {
-    setFiles(event.target.files);
+  const onImageFileChanges = (event: any) => {
+    setImageFiles(event.target.files);
+  };
+  const onPdfFileChanges = (event: any) => {
+    setPdfFiles(event.target.files);
   };
 
   const onSave = async () => {
-    const storageRef = firebase.storage().ref(`${user.uid}/images/`);
+    // const storageRef = firebase.storage().ref(`${user.uid}/images/`);
 
-    uploadFiles(storageRef, files);
+    // uploadFiles(storageRef, files);
   };
 
   return (
@@ -111,8 +118,31 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
               rows="4"
               helperText="Describe your project to the world. "
             />
-
             <TextField
+              id="bid"
+              label="winning bid"
+              placeholder=""
+              fullWidth
+              margin="normal"
+              helperText="This displays the amount bid placed onto the property"
+            />
+            <TextField
+              id="price"
+              label="total price"
+              placeholder=""
+              fullWidth
+              margin="normal"
+              helperText="This shows the total cost of the chosen property"
+            />
+            <TextField
+              id="construct"
+              label="Estimated Time of Construction"
+              placeholder=""
+              fullWidth
+              margin="normal"
+              helperText="This determines the amount of time needed to construct a building onto a property"
+            />
+            {/* <TextField
               id="videoUrl"
               label="Video url"
               placeholder=""
@@ -121,8 +151,40 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
               multiline
               rows="4"
               helperText="A walkthru of your potential project"
-            />
-            <input type="file" onChange={onFileChanges} />
+            /> */}
+            <p>
+              Insert images of property here.
+            </p>
+            <input type="file" onChange={onImageFileChanges} />
+            <p>
+              Submit proposal here.
+            </p>
+            <input type="file" onChange={onPdfFileChanges} />
+
+            <h2>Listing Options</h2>
+            <p>
+              Create an option to allow users to commit to your project.
+            </p>
+          <TextField
+              id="details"
+              label="details about project options"
+              placeholder=" modern studio w/ nice rustic kitchen"
+              fullWidth
+              margin="normal"
+              helperText="Describes the options for this commitment"
+          />
+          <TextField
+              id="price"
+              label="the overall cost of project"
+              placeholder=" modern studio w/ nice rustic kitchen"
+              fullWidth
+              margin="normal"
+              helperText="Describes the total cost this option"
+          />
+          <p>
+            Upload images for this project
+          </p>
+        <input type="file" onChange={onImageFileChanges} />
           </Form>
           <Button onClick={onSave}>Save</Button>
         </ModalContainer>
