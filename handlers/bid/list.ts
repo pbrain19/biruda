@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+
 import models from '../../models';
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-    const payload = req.body;
-    const listingInstance = await models.Listings.create(payload: );
-    res.status(200).json();
+
+export default async (_: NextApiRequest, res: NextApiResponse) => {
+    const bidInstance = await models.Bid.findAll();
+
+    res.status(200).json(bidInstance);
 };
