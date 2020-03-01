@@ -7,7 +7,7 @@ interface MyModel extends Sequelize.Model {
 
 // Need to declare the static model so `findOne` etc. use correct types.
 type MyModelStatic = typeof Sequelize.Model & {
-  new (values?: object, options?: Sequelize.BuildOptions): MyModel;
+  new (values?: object, options?: Sequelize.BuildOptions): MyModel & Listings;
 };
 
 export default (sequelize: Sequelize.Sequelize) => {
