@@ -1,6 +1,24 @@
 import * as Sequelize from 'sequelize';
 
 export default (sequelize: Sequelize.Sequelize) => {
+const ListingOption = sequelize.define(
+  'listing option', {
+    images: {
+      type: Sequelize.ARRAY(Sequelize.STRING),
+      allowNull: false,
+    },
+    price: {
+      type: Sequelize.NUMBER,
+      allowNull: false,
+    },
+    details: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+  }
+
+)
+
   const Listing = sequelize.define(
     'listing',
     {
@@ -32,6 +50,18 @@ export default (sequelize: Sequelize.Sequelize) => {
       },
       images: {
         type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: false,
+      },
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      commitment: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      housingOptions: {
+        type: Sequelize.ARRAY(ListingOption),
         allowNull: false,
       },
     },
