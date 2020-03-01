@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { uploadFiles } from '../../common/imageUpload';
 import { fetchWrapper } from '../../utils/fetch-wrapper';
 
 import PersonIcon from '@material-ui/icons/Person';
@@ -27,23 +28,6 @@ const Form = styled.form`
 
 type ListingFormModalProps = {
   user: firebase.User;
-};
-
-const uploadFiles = async (
-  storageRef: firebase.storage.Reference,
-  files: any
-) => {
-  const urls = [];
-  for (let i = 0; i < files.length; i++) {
-    const currentFile = files[i];
-    const childStorage = storageRef.child(currentFile.name);
-
-    const uploadedFile = await childStorage.put(currentFile);
-    const downloadUrl = await uploadedFile.ref.getDownloadURL();
-    urls.push(downloadUrl);
-  }
-
-  return urls;
 };
 
 const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
