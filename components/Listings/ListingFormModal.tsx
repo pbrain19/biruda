@@ -5,6 +5,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 
+
 import { Modal, TextField, IconButton, Button } from '../common';
 
 const ModalContainer = styled.div`
@@ -46,11 +47,23 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   user,
 }: ListingFormModalProps) => {
   const [open, setOpen] = React.useState(false);
+  const [option, setOption] = React.useState({});
+  const [listing, setListing] = React.useState({});
   const [imagefiles, setImageFiles] = React.useState([]);
   const [pdffiles, setPdfFiles] = React.useState([]);
+  const [optionimages,setOptionImages ] = React.useState([]);
 
   const handleOpen = () => {
     setOpen(true);
+  };
+
+  const handleOptionUpdate = (keyId: string) => (value: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedOption = Object.assign({}, option, {[keyId]:value})
+    setOption(updatedOption);
+  };  
+  const handleListingUpdate = (keyId: string) => (value: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedListing = Object.assign({}, listing, {[keyId]:value})
+    setListing(updatedListing);
   };
 
   const handleClose = () => {
@@ -100,6 +113,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
           <Form noValidate autoComplete="off">
             <TextField
               id="title"
+              onChange={handleListingUpdate('title')}
               label="Project title"
               placeholder="Empire state building v2.52"
               fullWidth
@@ -110,6 +124,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             />
             <TextField
               id="description"
+              onChange={handleListingUpdate('description')}
               label="Project description"
               placeholder=""
               fullWidth
@@ -120,6 +135,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             />
             <TextField
               id="bid"
+              onChange={handleListingUpdate('bid')}
               label="winning bid"
               placeholder=""
               fullWidth
@@ -128,6 +144,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             />
             <TextField
               id="price"
+              onChange={handleListingUpdate('price')}
               label="total price"
               placeholder=""
               fullWidth
@@ -136,6 +153,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             />
             <TextField
               id="construct"
+              onChange={handleListingUpdate('construct')}
               label="Estimated Time of Construction"
               placeholder=""
               fullWidth
@@ -167,6 +185,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             </p>
           <TextField
               id="details"
+              onChange={handleOptionUpdate('details')}
               label="details about project options"
               placeholder=" modern studio w/ nice rustic kitchen"
               fullWidth
@@ -175,6 +194,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
           />
           <TextField
               id="price"
+              onChange={handleOptionUpdate('price')}
               label="the overall cost of project"
               placeholder=" modern studio w/ nice rustic kitchen"
               fullWidth
