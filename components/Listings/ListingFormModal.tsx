@@ -47,13 +47,17 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   const handleOptionUpdate = (keyId: string) => (
     value: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedOption = Object.assign({}, option, { [keyId]: value });
+    const updatedOption = Object.assign({}, option, {
+      [keyId]: value.target.value,
+    });
     setOption(updatedOption);
   };
   const handleListingUpdate = (keyId: string) => (
     value: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedListing = Object.assign({}, listing, { [keyId]: value });
+    const updatedListing = Object.assign({}, listing, {
+      [keyId]: value.target.value,
+    });
     setListing(updatedListing);
   };
 
