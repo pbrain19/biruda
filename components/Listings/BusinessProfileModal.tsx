@@ -16,7 +16,6 @@ const ModalContainer = styled.div`
   box-shadow: ${props => props.theme.shadows[5]};
   padding: ${props => props.theme.spacing(2, 4, 3)};
   margin: auto;
-
   max-height: 700px;
   overflow: auto;
 `;
@@ -31,7 +30,7 @@ type BusinessFormModalProps = {
 };
 
 const BusinessFormModal: React.FunctionComponent<BusinessFormModalProps> = ({
-  
+  user,
 }: BusinessFormModalProps) => {
   const [open, setOpen] = React.useState(false);
   const [option, setOption] = React.useState({});
@@ -89,7 +88,6 @@ const BusinessFormModal: React.FunctionComponent<BusinessFormModalProps> = ({
       credentials: 'same-origin',
       body: JSON.stringify(payload),
     });
-
   };
 
   return (
@@ -132,7 +130,8 @@ const BusinessFormModal: React.FunctionComponent<BusinessFormModalProps> = ({
             />
             <TextField
               id="description"
-              label="Project description"s
+              label="Project description"
+              s
               placeholder=""
               fullWidth
               margin="normal"
@@ -161,8 +160,7 @@ const BusinessFormModal: React.FunctionComponent<BusinessFormModalProps> = ({
               multiline
               rows="4"
               helperText="The business description."
-            />  
-
+            />
 
             <input type="file" onChange={onFileChanges} />
           </Form>

@@ -31,7 +31,7 @@ type ListingFormModalProps = {
 };
 
 const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
-  
+  user,
 }: ListingFormModalProps) => {
   const [open, setOpen] = React.useState(false);
   const [option, setOption] = React.useState({});
