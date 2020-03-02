@@ -3,8 +3,11 @@ import Link from 'next/link';
 import Head from 'next/head';
 
 import Layout from '../components/Layout';
+import { Listings } from '../interfaces';
 import { ContextProps } from '../common/context';
 import { NextPage } from 'next';
+
+const ListItem = (props: { listing: Listings }) => <div></div>;
 
 const IndexPage: NextPage<ContextProps> = ({ User }: ContextProps) => {
   return (
