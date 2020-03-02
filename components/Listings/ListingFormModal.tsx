@@ -47,13 +47,13 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   const handleOptionUpdate = (keyId: string) => (
     value: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedOption = Object.assign({}, option, { [keyId]: value });
+    const updatedOption = Object.assign({}, option, { [keyId]: value.target.value });
     setOption(updatedOption);
   };
   const handleListingUpdate = (keyId: string) => (
     value: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedListing = Object.assign({}, listing, { [keyId]: value });
+    const updatedListing = Object.assign({}, listing, { [keyId]: value.target.value });
     setListing(updatedListing);
   };
 
@@ -157,15 +157,7 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
               rows="4"
               helperText="Describe your project to the world. "
             />
-            <TextField
-              id="bid"
-              onChange={handleListingUpdate('bid')}
-              label="winning bid"
-              placeholder=""
-              fullWidth
-              margin="normal"
-              helperText="This displays the amount bid placed onto the property"
-            />
+
             <TextField
               id="price"
               onChange={handleListingUpdate('price')}

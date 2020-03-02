@@ -64,6 +64,11 @@ app.prepare().then(() => {
   });
 
   server.get('*', (req, res) => {
+
+    if (req.method === 'POST') {
+      console.log('it made it to the handler ===============================)))')
+
+    }
     return handle(req, res);
   });
 
