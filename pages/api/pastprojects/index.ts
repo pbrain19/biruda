@@ -7,6 +7,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (req.method) {
       case 'POST':
+        
         listingCreate(req, res);
         break;
 
