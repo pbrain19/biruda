@@ -1,17 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { sampleUserData } from '../../../utils/sample-data';
 
-const methodMap = {
-  POST: () => {},
-};
-
 export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (!Array.isArray(sampleUserData)) {
       throw new Error('Cannot find user data');
     }
-
-    let effectiveMethod;
 
     switch (req.method) {
       case 'POST':
