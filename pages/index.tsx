@@ -7,7 +7,12 @@ import { Listings } from '../interfaces';
 import { ContextProps } from '../common/context';
 import { NextPage } from 'next';
 
-const ListItem = (props: { listing: Listings }) => <div></div>;
+const ListItem = (props: { listing: Listings }) =>
+  <div>
+    <p>
+      images, address, total house cost, and description
+    </p>
+  </div>;
 
 const IndexPage: NextPage<ContextProps> = ({ User }: ContextProps) => {
   return (

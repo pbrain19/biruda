@@ -16,7 +16,6 @@ const ModalContainer = styled.div`
   box-shadow: ${props => props.theme.shadows[5]};
   padding: ${props => props.theme.spacing(2, 4, 3)};
   margin: auto;
-
   max-height: 700px;
   overflow: auto;
 `;
@@ -26,13 +25,13 @@ const Form = styled.form`
   flex-direction: column;
 `;
 
-type ListingFormModalProps = {
+type BusinessFormModalProps = {
   user: firebase.User;
 };
 
-const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
+const BusinessFormModal: React.FunctionComponent<BusinessFormModalProps> = ({
   user,
-}: ListingFormModalProps) => {
+}: BusinessFormModalProps) => {
   const [open, setOpen] = React.useState(false);
   const [option, setOption] = React.useState({});
   const [listing, setListing] = React.useState({});
@@ -47,25 +46,13 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   const handleOptionUpdate = (keyId: string) => (
     value: React.ChangeEvent<HTMLInputElement>
   ) => {
-<<<<<<< HEAD
-    const updatedOption = Object.assign({}, option, { [keyId]: value.target.value });
-=======
-    const updatedOption = Object.assign({}, option, {
-      [keyId]: value.target.value,
-    });
->>>>>>> 9da167c49165c3b2415953474f1329e4d274a53a
+    const updatedOption = Object.assign({}, option, { [keyId]: value });
     setOption(updatedOption);
   };
   const handleListingUpdate = (keyId: string) => (
     value: React.ChangeEvent<HTMLInputElement>
   ) => {
-<<<<<<< HEAD
-    const updatedListing = Object.assign({}, listing, { [keyId]: value.target.value });
-=======
-    const updatedListing = Object.assign({}, listing, {
-      [keyId]: value.target.value,
-    });
->>>>>>> 9da167c49165c3b2415953474f1329e4d274a53a
+    const updatedListing = Object.assign({}, listing, { [keyId]: value });
     setListing(updatedListing);
   };
 
@@ -94,7 +81,6 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
       images: imagesUrls,
       pdfProposal: pdfUrls[0],
     });
-
     const newListing = await fetchWrapper('/api/listings', {
       method: 'POST',
       // eslint-disable-next-line no-undef
@@ -102,21 +88,6 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
       credentials: 'same-origin',
       body: JSON.stringify(payload),
     });
-
-    const optionPayload = Object.assign({}, option, {
-      images: optionsImagesUrl,
-    });
-
-    const newOption = await fetchWrapper('/api/listingoptions', {
-      method: 'POST',
-      // eslint-disable-next-line no-undef
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-      credentials: 'same-origin',
-      body: JSON.stringify(optionPayload),
-    });
-
-    console.log(newListing, newOption);
-    debugger;
   };
 
   return (
@@ -149,7 +120,6 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
           <Form noValidate autoComplete="off">
             <TextField
               id="title"
-              onChange={handleListingUpdate('title')}
               label="Project title"
               placeholder="Empire state building v2.52"
               fullWidth
@@ -160,8 +130,8 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             />
             <TextField
               id="description"
-              onChange={handleListingUpdate('description')}
               label="Project description"
+              s
               placeholder=""
               fullWidth
               margin="normal"
@@ -171,50 +141,28 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
             />
 
             <TextField
-              id="price"
-              onChange={handleListingUpdate('price')}
-              label="total price"
+              id="videoUrl"
+              label="Video url"
               placeholder=""
               fullWidth
               margin="normal"
-              helperText="This shows the total cost of the chosen property"
+              multiline
+              rows="4"
+              helperText="A walkthru of your potential project"
             />
-            <TextField
-              id="construct"
-              onChange={handleListingUpdate('construct')}
-              label="Estimated Time of Construction"
-              placeholder=""
-              fullWidth
-              margin="normal"
-              helperText="This determines the amount of time needed to construct a building onto a property"
-            />
-            <p>Insert images of property here.</p>
-            <input type="file" onChange={onImageFileChanges} />
-            <p>Submit proposal here.</p>
-            <input type="file" onChange={onPdfFileChanges} />
 
-            <h2>Listing Options</h2>
-            <p>Create an option to allow users to commit to your project.</p>
             <TextField
-              id="details"
-              onChange={handleOptionUpdate('details')}
-              label="details about project options"
-              placeholder=" modern studio w/ nice rustic kitchen"
+              id="BusinessProfile"
+              label="Business profile"
+              placeholder=""
               fullWidth
               margin="normal"
-              helperText="Describes the options for this commitment"
+              multiline
+              rows="4"
+              helperText="The business description."
             />
-            <TextField
-              id="price"
-              onChange={handleOptionUpdate('price')}
-              label="the overall cost of project"
-              placeholder=" modern studio w/ nice rustic kitchen"
-              fullWidth
-              margin="normal"
-              helperText="Describes the total cost this option"
-            />
-            <p>Upload images for this project</p>
-            <input type="file" onChange={onOptionImagesChange} />
+
+            <input type="file" onChange={onFileChanges} />
           </Form>
           <Button onClick={onSave}>Save</Button>
         </ModalContainer>
@@ -223,4 +171,4 @@ const ListingFormModal: React.FunctionComponent<ListingFormModalProps> = ({
   );
 };
 
-export default ListingFormModal;
+export default BusinessFormModal;
